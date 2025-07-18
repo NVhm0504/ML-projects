@@ -1,0 +1,45 @@
+✅ Project 13: Human Activity Recognition (HAR) using ML
+
+We’ll use the UCI Human Activity Recognition (HAR) dataset, where data is collected via smartphones.
+▶️ Step 1: Install Libraries
+
+pip install pandas numpy scikit-learn
+
+▶️ Step 2: Load Dataset
+
+Download dataset from:
+👉 UCI HAR Dataset on Kaggle
+
+import pandas as pd
+
+# Load the features
+X_train = pd.read_csv('train/X_train.txt', delim_whitespace=True, header=None)
+y_train = pd.read_csv('train/y_train.txt', delim_whitespace=True, header=None)
+X_test = pd.read_csv('test/X_test.txt', delim_whitespace=True, header=None)
+y_test = pd.read_csv('test/y_test.txt', delim_whitespace=True, header=None)
+
+print(X_train.shape, y_train.shape)
+
+▶️ Step 3: Model Training
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf.fit(X_train, y_train.values.ravel())
+
+▶️ Step 4: Model Evaluation
+
+y_pred = clf.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+✅ Activity Labels
+
+1: Walking
+2: Walking Upstairs
+3: Walking Downstairs
+4: Sitting
+5: Standing
+6: Laying

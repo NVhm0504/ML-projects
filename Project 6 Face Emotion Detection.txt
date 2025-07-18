@@ -1,0 +1,56 @@
+✅ Project 6: Face Emotion Detection (AI/DL)
+
+We’ll use the fer library for facial emotion recognition in real-time from a webcam.
+▶️ Step 1: Install Dependencies
+
+pip install fer opencv-python
+
+▶️ Step 2: Python Code for Real-Time Emotion Detection
+
+import cv2
+from fer import FER
+
+# Initialize the FER detector
+detector = FER(mtcnn=True)
+
+# Start the webcam
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    # Detect emotions in the frame
+    result = detector.detect_emotions(frame)
+
+    for face in result:
+        (x, y, w, h) = face["box"]
+        emotion, score = max(face["emotions"].items(), key=lambda item: item[1])
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (255,0,0), 2)
+        cv2.putText(frame, f'{emotion} ({score:.2f})', (x, y-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0,255,0), 2)
+
+    cv2.imshow('Real-time Emotion Detection', frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+
+✅ Detected Emotions
+
+    Angry
+
+    Disgust
+
+    Fear
+
+    Happy
+
+    Sad
+
+    Surprise
+
+    Neutral

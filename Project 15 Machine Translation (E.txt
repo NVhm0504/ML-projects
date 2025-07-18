@@ -1,0 +1,82 @@
+✅ Project 15: Machine Translation (English to French using Seq2Seq with Attention)
+
+We’ll build a basic Seq2Seq (Encoder-Decoder with Attention) model for translating English sentences to French.
+▶️ Step 1: Install Libraries
+
+pip install tensorflow numpy
+
+▶️ Step 2: Sample Dataset
+
+# Sample data
+english_sentences = ['hello', 'how are you', 'what is your name', 'good morning']
+french_sentences = ['bonjour', 'comment ça va', 'quel est ton nom', 'bonjour']
+
+print(list(zip(english_sentences, french_sentences)))
+
+▶️ Step 3: Tokenization and Padding
+
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+eng_tokenizer = Tokenizer()
+eng_tokenizer.fit_on_texts(english_sentences)
+eng_sequences = eng_tokenizer.texts_to_sequences(english_sentences)
+eng_padded = pad_sequences(eng_sequences, padding='post')
+
+french_tokenizer = Tokenizer()
+french_tokenizer.fit_on_texts(french_sentences)
+french_sequences = french_tokenizer.texts_to_sequences(french_sentences)
+french_padded = pad_sequences(french_sequences, padding='post')
+
+▶️ Step 4: Model Building
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, LSTM, Dense
+
+vocab_size_eng = len(eng_tokenizer.word_index) + 1
+vocab_size_fr = len(french_tokenizer.word_index) + 1
+
+model = Sequential([
+    Embedding(input_dim=vocab_size_eng, output_dim=64, input_length=eng_padded.shape[1]),
+    LSTM(64),
+    Dense(vocab_size_fr, activation='softmax')
+])
+
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy')
+
+▶️ Step 5: Model Training
+
+We’ll simplify the output (train only for first word of output for demonstration):
+
+import numpy as np
+
+french_padded_first_word = np.array([seq[0] for seq in french_padded])
+
+model.fit(eng_padded, french_padded_first_word, epochs=300, verbose=0)
+
+▶️ Step 6: Translation Example
+
+def translate(sentence):
+    seq = eng_tokenizer.texts_to_sequences([sentence])
+    pad_seq = pad_sequences(seq, maxlen=eng_padded.shape[1], padding='post')
+    pred = model.predict(pad_seq)
+    predicted_word_idx = np.argmax(pred, axis=1)[0]
+    
+    for word, index in french_tokenizer.word_index.items():
+        if index == predicted_word_idx:
+            return word
+    return ""
+
+# Example Translation
+print("hello =>", translate("hello"))
+print("how are you =>", translate("how are you"))
+
+✅ Note
+
+For full-sentence translation:
+
+    A proper Seq2Seq model with encoder-decoder.
+
+    Use attention mechanisms.
+
+    Dataset: WMT English-French Dataset

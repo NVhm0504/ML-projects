@@ -1,0 +1,60 @@
+✅ Project 4: House Price Prediction (Regression - ML)
+▶️ Libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+▶️ Dataset
+
+We’ll use the Boston Housing Dataset, but since it's deprecated in sklearn, we can load it via seaborn or from Kaggle:
+
+# Load the dataset from seaborn
+boston = sns.load_dataset('mpg').dropna()
+
+print(boston.head())
+
+Alternatively, for the original dataset:
+
+from sklearn.datasets import load_boston
+boston_data = load_boston()
+df = pd.DataFrame(boston_data.data, columns=boston_data.feature_names)
+df['PRICE'] = boston_data.target
+
+print(df.head())
+
+▶️ Exploratory Data Analysis
+
+sns.pairplot(df[['RM', 'LSTAT', 'PTRATIO', 'PRICE']])
+plt.show()
+
+▶️ Feature and Target Split
+
+X = df[['RM', 'LSTAT', 'PTRATIO']]  # example features
+y = df['PRICE']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+▶️ Model Training
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+▶️ Prediction and Evaluation
+
+y_pred = model.predict(X_test)
+
+print("Mean Squared Error:", mean_squared_error(y_test, y_pred))
+print("R2 Score:", r2_score(y_test, y_pred))
+
+▶️ Visualization
+
+plt.scatter(y_test, y_pred)
+plt.xlabel("Actual Prices")
+plt.ylabel("Predicted Prices")
+plt.title("Actual vs Predicted")
+plt.show()

@@ -1,0 +1,48 @@
+✅ Project 10: Spam Email Detection (ML/NLP)
+
+We’ll use the SMS Spam Collection Dataset from UCI.
+▶️ Step 1: Install Libraries
+
+pip install pandas scikit-learn
+
+▶️ Step 2: Load Dataset
+
+import pandas as pd
+
+# Dataset link: https://www.kaggle.com/datasets/uciml/sms-spam-collection-dataset
+df = pd.read_csv('spam.csv', encoding='latin-1')[['v1', 'v2']]
+df.columns = ['label', 'message']
+
+print(df.head())
+
+▶️ Step 3: Preprocessing
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, classification_report
+
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(df['message'])
+y = df['label'].map({'ham':0, 'spam':1})
+
+▶️ Step 4: Model Training
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = MultinomialNB()
+model.fit(X_train, y_train)
+
+▶️ Step 5: Evaluation
+
+y_pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Report:\n", classification_report(y_test, y_pred))
+
+✅ Bonus: Predict on New Email
+
+sample_msg = ["Congratulations! You've won a lottery worth $1000."]
+sample_vec = vectorizer.transform(sample_msg)
+predicted = model.predict(sample_vec)
+
+print("Spam (1=Spam, 0=Ham):", predicted[0])

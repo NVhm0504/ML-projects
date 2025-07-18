@@ -1,0 +1,50 @@
+✅ Project 9: Text Sentiment Analysis (ML/NLP)
+
+We'll use the Twitter Sentiment140 dataset, but here's a quick pipeline with TextBlob and sklearn.
+▶️ Step 1: Install Libraries
+
+pip install textblob scikit-learn pandas
+
+▶️ Step 2: Sample Dataset
+
+import pandas as pd
+
+# Example data
+data = {'text': ["I love this product!", "This is the worst!", "I'm feeling great", "What a bad experience", "I'm happy today"],
+        'label': [1, 0, 1, 0, 1]}  # 1: Positive, 0: Negative
+
+df = pd.DataFrame(data)
+print(df)
+
+▶️ Step 3: Text Preprocessing
+
+from sklearn.feature_extraction.text import CountVectorizer
+
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(df['text']).toarray()
+y = df['label']
+
+▶️ Step 4: Model Training
+
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, classification_report
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = MultinomialNB()
+model.fit(X_train, y_train)
+
+▶️ Step 5: Evaluation
+
+y_pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Report:\n", classification_report(y_test, y_pred))
+
+✅ Bonus: Sentiment Prediction Example
+
+sample_text = ["I feel sad and terrible"]
+sample_vec = vectorizer.transform(sample_text).toarray()
+predicted = model.predict(sample_vec)
+print("Sentiment (1=Positive, 0=Negative):", predicted[0])
+

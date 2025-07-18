@@ -1,0 +1,44 @@
+✅ Project 1: Iris Flower Classification (ML)
+▶️ Libraries
+
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, accuracy_score
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+▶️ Load Data
+
+# Load dataset
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df['species'] = iris.target
+
+print(df.head())
+
+▶️ Data Visualization
+
+sns.pairplot(df, hue='species')
+plt.show()
+
+▶️ Train Test Split
+
+X = iris.data
+y = iris.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+▶️ Model Training
+
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+
+▶️ Prediction and Evaluation
+
+y_pred = clf.predict(X_test)
+
+print("Accuracy Score:", accuracy_score(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+

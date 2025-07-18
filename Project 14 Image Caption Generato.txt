@@ -1,0 +1,55 @@
+✅ Project 14: Image Caption Generator (Deep Learning - NLP + CV)
+
+This project uses a CNN (InceptionV3) to extract image features and an LSTM for generating captions. It’s a simplified version suitable for small datasets like Flickr8k.
+▶️ Step 1: Install Libraries
+
+pip install tensorflow numpy pandas pillow
+
+▶️ Step 2: Load Pre-trained CNN Model for Feature Extraction
+
+from tensorflow.keras.applications.inception_v3 import InceptionV3, preprocess_input
+from tensorflow.keras.preprocessing import image
+import numpy as np
+
+model = InceptionV3(weights='imagenet')
+
+▶️ Step 3: Image Preprocessing
+
+def preprocess_img(img_path):
+    img = image.load_img(img_path, target_size=(299, 299))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = preprocess_input(img_array)
+    return img_array
+
+▶️ Step 4: Feature Extraction
+
+def extract_features(img_path):
+    img_array = preprocess_img(img_path)
+    features = model.predict(img_array)
+    return features
+
+▶️ Step 5: Dummy LSTM Caption Generator (Mockup for Demo)
+
+For a full caption generator, you'd train an LSTM model on the Flickr8k dataset. Here is a simplified logic:
+
+def generate_caption(features):
+    # Dummy caption based on detected features
+    return "A person standing on the beach with waves."
+
+▶️ Step 6: Complete Prediction Flow
+
+img_path = 'example.jpg'  # Replace with your image path
+features = extract_features(img_path)
+caption = generate_caption(features)
+print(f"Generated Caption: {caption}")
+
+✅ Note
+
+For a full-fledged model:
+
+    Extract features via CNN
+
+    Train an Encoder-Decoder LSTM on captions paired with image features
+
+    Dataset: Flickr8k

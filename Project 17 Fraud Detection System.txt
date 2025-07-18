@@ -1,0 +1,55 @@
+✅ Project 17: Fraud Detection System (ML - Classification)
+
+We’ll use the Credit Card Fraud Detection Dataset from Kaggle.
+▶️ Step 1: Install Libraries
+
+pip install pandas scikit-learn matplotlib seaborn
+
+▶️ Step 2: Load Dataset
+
+import pandas as pd
+
+# Download dataset from: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+df = pd.read_csv('creditcard.csv')
+print(df.head())
+
+▶️ Step 3: Data Exploration
+
+print("Fraudulent Transactions:", df['Class'].value_counts()[1])
+print("Non-Fraudulent Transactions:", df['Class'].value_counts()[0])
+
+▶️ Step 4: Train-Test Split
+
+from sklearn.model_selection import train_test_split
+
+X = df.drop('Class', axis=1)
+y = df['Class']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+
+▶️ Step 5: Model Training (RandomForest)
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+▶️ Step 6: Evaluation
+
+y_pred = model.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+▶️ Step 7: Feature Importance (Optional)
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+importances = model.feature_importances_
+feat_importances = pd.Series(importances, index=X.columns)
+feat_importances.nlargest(10).plot(kind='barh')
+plt.title("Top 10 Important Features")
+plt.show()

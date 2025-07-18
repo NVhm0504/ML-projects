@@ -1,0 +1,53 @@
+✅ Project 20: Recommendation System (Content-Based Filtering - ML)
+
+We’ll create a simple movie recommendation system based on movie descriptions.
+▶️ Step 1: Install Libraries
+
+pip install pandas scikit-learn
+
+▶️ Step 2: Sample Movie Dataset
+
+import pandas as pd
+
+data = {'title': ['The Matrix', 'John Wick', 'Inception', 'The Dark Knight', 'Interstellar'],
+        'description': [
+            'A computer hacker learns about the true nature of reality.',
+            'An ex-hitman comes out of retirement to track down gangsters.',
+            'A thief who steals corporate secrets through dream-sharing technology.',
+            'Batman faces the Joker who wreaks havoc in Gotham.',
+            'Explorers travel through a wormhole in space in an attempt to ensure humanity\'s survival.'
+        ]}
+
+df = pd.DataFrame(data)
+print(df)
+
+▶️ Step 3: Convert Text to Vectors
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+tfidf = TfidfVectorizer(stop_words='english')
+tfidf_matrix = tfidf.fit_transform(df['description'])
+
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+
+▶️ Step 4: Recommendation Function
+
+def recommend(title, cosine_sim=cosine_sim):
+    idx = df[df['title'] == title].index[0]
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:4]  # Top 3 similar movies
+    movie_indices = [i[0] for i in sim_scores]
+    return df['title'].iloc[movie_indices]
+
+▶️ Step 5: Test Recommendation
+
+recommended = recommend('Inception')
+print("Recommended Movies:\n", recommended.tolist())
+
+✅ Output Example
+
+For Inception you might get:
+
+['Interstellar', 'The Matrix', 'The Dark Knight']
